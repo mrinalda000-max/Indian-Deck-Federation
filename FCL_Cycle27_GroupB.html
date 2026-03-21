@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FCL — Cycle 27 · Group B</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080c16;--bg2:#0d1220;--bg3:#111828;--bg4:#171f30;
+  --border:#1c2840;--border2:#243050;
+  --gold:#c9a84c;--gold-light:#e8c97a;--gold-pale:#2a2010;
+  --rapid:#e67e22;--rapid-dim:#3a2008;--rapid-pale:#ffecd6;
+  --text:#dde4f0;--text2:#8a9ab8;--text3:#5a6a88;
+  --green:#2ecc71;--red:#e74c3c;--blue:#3d7ae8;
+  --white:#e8edf8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* HEADER */
+header{background:linear-gradient(135deg,#04070f 0%,#0a1020 60%,#0d1628 100%);border-bottom:1px solid var(--border2);padding:0;position:relative;overflow:hidden;}
+header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(230,126,34,.08) 0%,transparent 60%);}
+header::after{content:'FCL';position:absolute;right:-20px;top:-10px;font-family:'Playfair Display',serif;font-size:160px;font-weight:900;color:rgba(230,126,34,.04);line-height:1;pointer-events:none;}
+.header-inner{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:36px 32px 30px;display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+.header-left{}
+.header-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--rapid);margin-bottom:8px;}
+.header-title{font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,36px);font-weight:900;color:var(--white);line-height:1.1;}
+.header-title span{color:var(--gold-light);}
+.header-meta{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;}
+.meta-tag{background:var(--bg4);border:1px solid var(--border2);border-radius:6px;padding:5px 12px;font-size:11px;font-family:'DM Mono',monospace;color:var(--text2);letter-spacing:.8px;}
+.meta-tag.rapid{background:var(--rapid-dim);border-color:var(--rapid);color:var(--rapid);}
+.header-right{text-align:right;}
+.cycle-badge{background:var(--gold-pale);border:1px solid var(--gold);border-radius:8px;padding:10px 18px;display:inline-block;}
+.cycle-badge .cb-label{font-size:10px;font-family:'DM Mono',monospace;color:var(--gold);letter-spacing:1.5px;margin-bottom:3px;}
+.cycle-badge .cb-val{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--gold-light);}
+
+/* NAV */
+nav{background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 32px;display:flex;overflow-x:auto;scrollbar-width:none;}
+.nav-inner::-webkit-scrollbar{display:none;}
+.tab-btn{background:none;border:none;color:var(--text3);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:14px 16px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s;}
+.tab-btn:hover{color:var(--text2);}
+.tab-btn.active{color:var(--gold-light);border-bottom-color:var(--gold);}
+
+/* MAIN */
+main{max-width:1100px;margin:0 auto;padding:36px 32px 80px;}
+.section{display:none;}
+.section.active{display:block;animation:fadeUp .3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.sec-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--white);margin-bottom:6px;}
+.sec-desc{font-size:13px;color:var(--text2);margin-bottom:24px;line-height:1.6;}
+
+/* CARDS */
+.info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:28px;}
+.info-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.ic-label{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px;}
+.ic-val{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--white);}
+.ic-sub{font-size:11px;color:var(--text3);margin-top:3px;}
+
+/* PLAYER TABLE */
+.table-wrap{background:var(--bg3);border:1px solid var(--border);border-radius:12px;overflow:hidden;overflow-x:auto;margin-bottom:24px;}
+table{width:100%;border-collapse:collapse;}
+thead tr{background:#060910;}
+thead th{text-align:left;padding:11px 14px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);font-family:'DM Mono',monospace;font-weight:400;white-space:nowrap;}
+tbody tr{border-bottom:1px solid var(--border);transition:background .15s;cursor:pointer;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:var(--bg4);}
+td{padding:10px 14px;font-size:13px;}
+.td-rank{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);}
+.td-name{font-weight:600;color:var(--white);}
+.td-elo{font-family:'DM Mono',monospace;font-size:13px;font-weight:600;}
+.elo-up{color:var(--green);}.elo-down{color:var(--red);}.elo-neutral{color:var(--text);}
+.title-pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;font-family:'DM Mono',monospace;}
+.pill-gm{background:#0f1e38;color:#4a7fe8;border:1px solid #2a4a8a;}
+.pill-cm{background:#0e1a2e;color:#6a9ad0;border:1px solid #1e3a6a;}
+.pill-fm{background:var(--bg4);color:var(--text2);border:1px solid var(--border2);}
+.pill-none{background:var(--bg4);color:var(--text3);border:1px solid var(--border);}
+.delta-badge{font-size:11px;font-family:'DM Mono',monospace;padding:2px 7px;border-radius:10px;}
+.delta-pos{background:rgba(46,204,113,.1);color:var(--green);border:1px solid rgba(46,204,113,.2);}
+.delta-neg{background:rgba(231,76,60,.1);color:var(--red);border:1px solid rgba(231,76,60,.2);}
+.delta-zero{background:var(--bg4);color:var(--text3);border:1px solid var(--border);}
+
+/* AVATAR */
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;color:white;flex-shrink:0;}
+
+/* BRACKET */
+.bracket-stage{margin-bottom:32px;}
+.stage-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.stage-label{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--rapid);}
+.stage-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--white);}
+.stage-badge{margin-left:auto;font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);background:var(--bg4);border:1px solid var(--border);padding:3px 10px;border-radius:10px;}
+
+.match-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;}
+.match-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s;}
+.match-card.active-match{border-color:var(--rapid);}
+.match-card.completed{border-color:var(--border2);}
+.match-header{background:#060910;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;}
+.match-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);letter-spacing:1px;}
+.match-status{font-size:10px;font-family:'DM Mono',monospace;padding:2px 8px;border-radius:10px;}
+.ms-pending{background:var(--bg4);color:var(--text3);border:1px solid var(--border);}
+.ms-live{background:rgba(230,126,34,.15);color:var(--rapid);border:1px solid rgba(230,126,34,.3);}
+.ms-done{background:rgba(46,204,113,.1);color:var(--green);border:1px solid rgba(46,204,113,.2);}
+.match-body{padding:14px 16px;}
+.match-player{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+.match-player:last-of-type{border-bottom:none;}
+.mp-name{flex:1;font-weight:600;font-size:13px;color:var(--white);}
+.mp-elo{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;}
+.mp-score{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text);}
+.mp-score.winner{color:var(--gold-light);}
+.mp-score.loser{color:var(--text3);}
+.match-games{padding:10px 16px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:6px;}
+.game-row{display:flex;align-items:center;gap:8px;}
+.game-label{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);min-width:50px;}
+.game-result-btns{display:flex;gap:6px;flex:1;}
+.grb{flex:1;padding:5px;border-radius:6px;border:1px solid var(--border2);background:var(--bg4);font-size:11px;font-family:'DM Mono',monospace;cursor:pointer;transition:all .15s;color:var(--text2);}
+.grb:hover{border-color:var(--rapid);color:var(--rapid);}
+.grb.selected-w{background:rgba(46,204,113,.15);border-color:var(--green);color:var(--green);}
+.grb.selected-d{background:rgba(201,168,76,.1);border-color:var(--gold);color:var(--gold-light);}
+.grb.selected-l{background:rgba(231,76,60,.1);border-color:var(--red);color:var(--red);}
+.elo-preview{padding:8px 16px;border-top:1px solid var(--border);font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);display:flex;justify-content:space-between;}
+
+/* ROUND ROBIN TABLE */
+.rr-table-wrap{background:var(--bg3);border:1px solid var(--border);border-radius:12px;overflow:hidden;overflow-x:auto;margin-bottom:20px;}
+.rr-note{padding:10px 16px;font-size:12px;color:var(--text2);border-bottom:1px solid var(--border);background:#060910;}
+
+/* PANEL */
+.panel{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:20px;}
+.panel-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--white);margin-bottom:16px;}
+.form-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:10px;}
+.form-group{display:flex;flex-direction:column;gap:4px;}
+.form-group label{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.5px;text-transform:uppercase;font-family:'DM Mono',monospace;}
+.form-select,.form-input{padding:8px 10px;border:1px solid var(--border2);border-radius:7px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--bg4);outline:none;transition:border .2s;}
+.form-select:focus,.form-input:focus{border-color:var(--rapid);}
+.btn{padding:8px 18px;border-radius:7px;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.btn-rapid{background:var(--rapid);color:white;}.btn-rapid:hover{background:#d35400;}
+.btn-sec{background:var(--bg4);color:var(--text);border:1px solid var(--border2);}.btn-sec:hover{background:var(--bg3);}
+.btn-gold{background:var(--gold);color:#0a0d14;}.btn-gold:hover{background:var(--gold-light);}
+.btn-danger{background:rgba(231,76,60,.1);color:var(--red);border:1px solid rgba(231,76,60,.2);}
+
+.toast{position:fixed;bottom:22px;right:22px;background:var(--bg3);color:var(--text);padding:10px 16px;border-radius:9px;font-size:13px;z-index:2000;transform:translateY(70px);opacity:0;transition:all .3s;border-left:3px solid var(--rapid);}
+.toast.show{transform:translateY(0);opacity:1;}
+
+hr.div{border:none;border-top:1px solid var(--border);margin:24px 0;}
+
+/* ELO EXPORT */
+.elo-export{background:linear-gradient(135deg,#0a1020,#0f1828);border:1px solid var(--border2);border-radius:12px;padding:22px;margin-bottom:20px;}
+.elo-export h3{font-family:'Playfair Display',serif;font-size:17px;color:var(--gold-light);margin-bottom:14px;}
+.export-row{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:7px;margin-bottom:6px;background:var(--bg4);}
+.er-name{font-weight:600;font-size:13px;color:var(--white);}
+.er-change{font-family:'DM Mono',monospace;font-size:13px;font-weight:600;}
+
+footer{background:#04070f;border-top:1px solid var(--border);text-align:center;padding:20px;font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);letter-spacing:1px;}
+footer span{color:var(--rapid);}
+
+@media(max-width:600px){
+  .header-inner{padding:24px 16px 20px;}
+  main{padding:24px 14px 60px;}
+  .nav-inner{padding:0 14px;}
+  .match-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="header-eyebrow">Indian Deck Federation · Grand Prix · Rapid</div>
+      <div class="header-title">FCL — <span>FIDE COCO League</span></div>
+      <div class="header-meta">
+        <span class="meta-tag rapid">Rapid Rated</span>
+        <span class="meta-tag">Single Knockout</span>
+        <span class="meta-tag">Best of 2 + Sudden Death</span>
+        <span class="meta-tag">10 Players</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="cycle-badge">
+        <div class="cb-label">Cycle · Group</div>
+        <div class="cb-val">27 · B</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <button class="tab-btn active" onclick="showTab('overview',this)">Overview</button>
+    <button class="tab-btn" onclick="showTab('bracket',this)">Bracket</button>
+    <button class="tab-btn" onclick="showTab('leaderboard',this)">Leaderboard</button>
+    <button class="tab-btn" onclick="showTab('elo',this)">Elo Changes</button>
+    <button class="tab-btn" onclick="showTab('setup',this)">⚙ Setup</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- OVERVIEW -->
+<section id="overview" class="section active">
+  <div class="sec-title">Tournament Overview</div>
+  <div class="sec-desc">FCL Cycle 27 · Group B · Grand Prix sub-event · Rapid Elo</div>
+
+  <div class="info-grid" id="overviewStats"></div>
+
+  <div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px;">
+    <div style="background:#060910;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--white);">Format</span>
+      <span style="font-size:10px;font-family:'DM Mono',monospace;color:var(--rapid);">FCL · Single Knockout</span>
+    </div>
+    <div style="padding:18px;display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:9px 14px;background:var(--bg4);border-radius:8px;border-left:3px solid var(--rapid);">
+        <div style="min-width:100px;font-weight:600;font-size:12px;color:var(--white);font-family:'DM Mono',monospace;">ROUND 1</div>
+        <div style="font-size:12px;color:var(--text2);">10 players → 5 matches · Best of 2 · Sudden death if 1-1</div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:9px 14px;background:var(--bg4);border-radius:8px;border-left:3px solid var(--gold);">
+        <div style="min-width:100px;font-weight:600;font-size:12px;color:var(--white);font-family:'DM Mono',monospace;">ROUND 2</div>
+        <div style="font-size:12px;color:var(--text2);">5 players · Mini Round Robin (p1vp2, p3vp4, p5vp1, p2vp3, p4vp5) · Lowest scorer eliminated → 4 remain</div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:9px 14px;background:var(--bg4);border-radius:8px;border-left:3px solid #3d7ae8;">
+        <div style="min-width:100px;font-weight:600;font-size:12px;color:var(--white);font-family:'DM Mono',monospace;">QUARTERS</div>
+        <div style="font-size:12px;color:var(--text2);">4 players → 2 matches · Best of 2 · Sudden death if 1-1</div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:9px 14px;background:var(--bg4);border-radius:8px;border-left:3px solid var(--green);">
+        <div style="min-width:100px;font-weight:600;font-size:12px;color:var(--white);font-family:'DM Mono',monospace;">FINAL</div>
+        <div style="font-size:12px;color:var(--text2);">2 players · Best of 2 · Sudden death if 1-1 · Winner = FCL Champion</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-title" style="font-size:18px;margin-bottom:12px;">Players</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Player</th><th>Title</th><th>Rapid Elo</th><th>Status</th></tr></thead>
+      <tbody id="playerListBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- BRACKET -->
+<section id="bracket" class="section">
+  <div class="sec-title">Bracket</div>
+  <div class="sec-desc">Enter game results below. Elo updates automatically after each game.</div>
+  <div id="bracketContent"></div>
+</section>
+
+<!-- LEADERBOARD -->
+<section id="leaderboard" class="section">
+  <div class="sec-title">Live Leaderboard</div>
+  <div class="sec-desc">Players ranked by current rapid Elo. Updates after each game entered.</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Rank</th><th>Player</th><th>Title</th><th>Start Elo</th><th>Current Elo</th><th>Change</th><th>W/D/L</th><th>Stage</th></tr></thead>
+      <tbody id="lbBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ELO CHANGES -->
+<section id="elo" class="section">
+  <div class="sec-title">Elo Changes</div>
+  <div class="sec-desc">All game-by-game Elo calculations. Copy final changes to FIDE Admin → Update Rating (Rapid).</div>
+
+  <div class="elo-export" id="eloExport">
+    <h3>📋 Final Elo Summary — Apply to FIDE</h3>
+    <div id="eloSummary"><p style="font-size:13px;color:var(--text3);">No games recorded yet.</p></div>
+  </div>
+
+  <div class="sec-title" style="font-size:17px;margin-bottom:12px;">Game Log</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Round</th><th>Game</th><th>Player A</th><th>Result</th><th>Player B</th><th>Elo Δ A</th><th>Elo Δ B</th></tr></thead>
+      <tbody id="gameLogBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SETUP -->
+<section id="setup" class="section">
+  <div class="sec-title">Setup & Management</div>
+  <div class="sec-desc">Configure players, reset tournament, manage rounds.</div>
+
+  <div class="panel">
+    <div class="panel-title">Set Player Starting Rapid Elo</div>
+    <div class="sec-desc" style="margin-bottom:14px;">Enter each player's current Rapid Elo from the FIDE database.</div>
+    <div id="eloSetupGrid" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;"></div>
+    <button class="btn btn-rapid" onclick="saveStartingElos()">Save Starting Elos</button>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Round 1 — Set Pairings</div>
+    <div class="sec-desc" style="margin-bottom:14px;">Assign 5 match pairings for Round 1.</div>
+    <div id="pairingSetup" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;"></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="btn btn-rapid" onclick="savePairings()">Save Pairings & Start R1</button>
+      <button class="btn btn-sec" onclick="autoSeedPairings()">Auto-seed by Elo</button>
+    </div>
+  </div>
+
+  <div class="panel" style="border-color:rgba(231,76,60,.2);">
+    <div class="panel-title" style="color:var(--red);">⚠ Danger</div>
+    <button class="btn btn-danger" onclick="resetTournament()">Reset Tournament</button>
+  </div>
+</section>
+
+</main>
+
+<footer><span>FCL</span> · FIDE COCO League · Cycle 27 · Group B · Indian Deck Federation</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══ DATA ═══
+const PLAYERS = [
+  {name:"Priyampali",title:"GM",startElo:2000,elo:2000},
+  {name:"Pari",title:"GM",startElo:2000,elo:2000},
+  {name:"Duda",title:"GM",startElo:2000,elo:2000},
+  {name:"Madhu",title:"CM",startElo:2000,elo:2000},
+  {name:"Harika",title:"FM",startElo:2000,elo:2000},
+  {name:"Jungwon",title:"CM",startElo:2000,elo:2000},
+  {name:"Tan Zhongyi",title:"—",startElo:2000,elo:2000},
+  {name:"Anish",title:"—",startElo:2000,elo:2000},
+  {name:"Fabi",title:"FM",startElo:2000,elo:2000},
+  {name:"Chandrali",title:"FM",startElo:2000,elo:2000},
+];
+
+// Tournament state
+let T = {
+  stage: 'setup', // setup | r1 | r2 | qf | final | done
+  pairings: { r1:[], r2:[], qf:[], final:[] },
+  matches: [], // {id, round, p1, p2, games:[], winner, status}
+  gameLog: [], // {round, matchId, gameNum, p1, p2, result, eloA, eloB, deltaA, deltaB}
+  playerStats: {}, // name -> {wins, draws, losses, stage}
+};
+
+// Init player stats
+PLAYERS.forEach(p=>{T.playerStats[p.name]={wins:0,draws:0,losses:0,stage:'active',r2score:0};});
+
+// ═══ ELO ═══
+function getK(elo){ return elo>=2400?10:elo>=2300?20:40; }
+function expected(ra,rb){ return 1/(1+Math.pow(10,(rb-ra)/400)); }
+function calcElo(ra,rb,score){
+  const we=expected(ra,rb);
+  const k=getK(ra);
+  return Math.max(100,Math.round(ra+k*(score-we)));
+}
+
+// ═══ AVATAR ═══
+const AV_OVERRIDES={
+  "Priyampali":"linear-gradient(135deg,#2980b9,#3498db)",
+  "Pari":"linear-gradient(135deg,#c0392b,#e74c3c)",
+  "Duda":"linear-gradient(135deg,#27ae60,#2ecc71)",
+  "Madhu":"linear-gradient(135deg,#8e44ad,#9b59b6)",
+  "Harika":"linear-gradient(135deg,#16a085,#1abc9c)",
+  "Jungwon":"linear-gradient(135deg,#0984e3,#74b9ff)",
+};
+function avGrad(name){
+  if(AV_OVERRIDES[name]) return AV_OVERRIDES[name];
+  let h=0; for(let i=0;i<name.length;i++) h=name.charCodeAt(i)+((h<<5)-h);
+  const hue=Math.abs(h)%360;
+  return `linear-gradient(135deg,hsl(${hue},55%,30%),hsl(${(hue+30)%360},65%,42%))`;
+}
+function avInitials(name){
+  const p=name.split(/[\s\-]/);
+  return p.length>=2?(p[0][0]+p[1][0]).toUpperCase():name.substring(0,2).toUpperCase();
+}
+function avHTML(name,size=32,fs=12){
+  return `<div class="av" style="width:${size}px;height:${size}px;background:${avGrad(name)};font-size:${fs}px;box-shadow:0 2px 8px rgba(0,0,0,.4);">${avInitials(name)}</div>`;
+}
+
+// ═══ PILL ═══
+const PILL={
+  "GM":"pill-gm","CM":"pill-cm","FM":"pill-fm","—":"pill-none",
+  "SGM":"pill-gm","D'":"pill-gm"
+};
+function pill(title){ return `<span class="title-pill ${PILL[title]||'pill-none'}">${title}</span>`; }
+
+// ═══ RENDER OVERVIEW ═══
+function renderOverview(){
+  // Stats
+  const active=PLAYERS.filter(p=>T.playerStats[p.name]?.stage!=='eliminated').length;
+  const gamesPlayed=T.gameLog.length;
+  const completed=T.matches.filter(m=>m.status==='done').length;
+  document.getElementById('overviewStats').innerHTML=`
+    <div class="info-card"><div class="ic-label">Players</div><div class="ic-val">10</div><div class="ic-sub">Group A</div></div>
+    <div class="info-card"><div class="ic-label">Active</div><div class="ic-val">${active}</div><div class="ic-sub">Still in tournament</div></div>
+    <div class="info-card"><div class="ic-label">Games</div><div class="ic-val">${gamesPlayed}</div><div class="ic-sub">Played so far</div></div>
+    <div class="info-card"><div class="ic-label">Matches</div><div class="ic-val">${completed}</div><div class="ic-sub">Completed</div></div>
+    <div class="info-card" style="border-color:var(--rapid);"><div class="ic-label">Stage</div><div class="ic-val" style="font-size:16px;color:var(--rapid);">${T.stage.toUpperCase()}</div><div class="ic-sub">Current</div></div>
+  `;
+  // Player list
+  const tbody=document.getElementById('playerListBody');
+  tbody.innerHTML='';
+  [...PLAYERS].sort((a,b)=>b.elo-a.elo).forEach((p,i)=>{
+    const stat=T.playerStats[p.name];
+    const delta=p.elo-p.startElo;
+    const dCls=delta>0?'elo-up':delta<0?'elo-down':'elo-neutral';
+    tbody.innerHTML+=`<tr>
+      <td class="td-rank">${i+1}</td>
+      <td><div style="display:flex;align-items:center;gap:9px;">${avHTML(p.name,30,11)}<span class="td-name">${p.name}</span></div></td>
+      <td>${pill(p.title)}</td>
+      <td class="td-elo ${dCls}">${p.elo}</td>
+      <td><span style="font-size:12px;color:${stat?.stage==='eliminated'?'var(--red)':stat?.stage==='winner'?'var(--gold-light)':'var(--green)'};">● ${stat?.stage==='eliminated'?'Eliminated':stat?.stage==='winner'?'Champion':'Active'}</span></td>
+    </tr>`;
+  });
+}
+
+// ═══ RENDER BRACKET ═══
+function renderBracket(){
+  const el=document.getElementById('bracketContent');
+  if(T.stage==='setup'){
+    el.innerHTML=`<div style="text-align:center;padding:48px;color:var(--text3);">
+      <div style="font-size:32px;margin-bottom:10px;">⚙</div>
+      <div style="font-size:14px;">Set up pairings in the <strong style="color:var(--rapid);">Setup</strong> tab first.</div>
+    </div>`;
+    return;
+  }
+  let html='';
+  // Round 1
+  const r1matches=T.matches.filter(m=>m.round==='r1');
+  if(r1matches.length){
+    html+=renderStage('Round 1','5 matches · Best of 2 · Sudden death if tied','r1',r1matches);
+  }
+  // Round 2
+  const r2matches=T.matches.filter(m=>m.round==='r2');
+  if(r2matches.length){
+    html+=renderStage('Round 2 — Mini RR','5 matches · Lowest scorer eliminated','r2',r2matches);
+  }
+  // QF
+  const qfmatches=T.matches.filter(m=>m.round==='qf');
+  if(qfmatches.length){
+    html+=renderStage('Quarterfinals','2 matches · Best of 2 · Sudden death if tied','qf',qfmatches);
+  }
+  // Final
+  const fmatches=T.matches.filter(m=>m.round==='final');
+  if(fmatches.length){
+    html+=renderStage('Final','Best of 2 · Sudden death if tied · FCL Champion','final',fmatches);
+  }
+  el.innerHTML=html||'<p style="color:var(--text3);">No matches yet.</p>';
+}
+
+function renderStage(title,desc,round,matches){
+  const colors={r1:'var(--rapid)',r2:'var(--gold)',qf:'#3d7ae8',final:'var(--green)'};
+  const col=colors[round]||'var(--text3)';
+  let html=`<div class="bracket-stage">
+    <div class="stage-header">
+      <div>
+        <div class="stage-label">${round.toUpperCase()}</div>
+        <div class="stage-title">${title}</div>
+      </div>
+      <div class="stage-badge">${desc}</div>
+    </div>
+    <div class="match-grid">`;
+  matches.forEach(m=>{
+    const p1=PLAYERS.find(p=>p.name===m.p1);
+    const p2=PLAYERS.find(p=>p.name===m.p2);
+    if(!p1||!p2) return;
+    const s1=m.games.reduce((a,g)=>a+(g.result==='p1'?1:g.result==='draw'?.5:0),0);
+    const s2=m.games.reduce((a,g)=>a+(g.result==='p2'?1:g.result==='draw'?.5:0),0);
+    const isDone=m.status==='done';
+    const maxGames=round==='r2'?1:2; // r2 is single games in mini-rr
+    const needSD=!isDone&&m.games.length>=2&&s1===s2&&round!=='r2';
+
+    // determine game slots to show
+    const gameSlots=[];
+    if(round==='r2'){
+      gameSlots.push({num:1,label:'Game 1'});
+    } else {
+      gameSlots.push({num:1,label:'Game 1'});
+      gameSlots.push({num:2,label:'Game 2'});
+      if(needSD||m.games.length>=3) gameSlots.push({num:3,label:'⚡ SD'});
+    }
+
+    html+=`<div class="match-card ${isDone?'completed':m.games.length>0?'active-match':''}">
+      <div class="match-header">
+        <span class="match-num">Match ${m.id} · ${round.toUpperCase()}</span>
+        <span class="match-status ${isDone?'ms-done':m.games.length>0?'ms-live':'ms-pending'}">${isDone?'✓ Done':m.games.length>0?'Live':'Pending'}</span>
+      </div>
+      <div class="match-body">
+        <div class="match-player">
+          ${avHTML(m.p1,28,10)}
+          <div class="mp-name">${m.p1}<span style="font-size:10px;color:var(--text3);margin-left:6px;">${p1.elo}</span></div>
+          <div class="mp-score ${isDone&&m.winner===m.p1?'winner':isDone?'loser':''}">${s1}</div>
+        </div>
+        <div class="match-player">
+          ${avHTML(m.p2,28,10)}
+          <div class="mp-name">${m.p2}<span style="font-size:10px;color:var(--text3);margin-left:6px;">${p2.elo}</span></div>
+          <div class="mp-score ${isDone&&m.winner===m.p2?'winner':isDone?'loser':''}">${s2}</div>
+        </div>
+      </div>
+      <div class="match-games">
+        ${gameSlots.map(gs=>{
+          const g=m.games[gs.num-1];
+          const r1sel=g?.result==='p1'?'selected-w':g?.result==='draw'?'selected-d':'';
+          const r2sel=g?.result==='p2'?'selected-w':g?.result==='draw'?'selected-d':'';
+          const lsel=g?.result==='p1'?'selected-l':g?.result==='p2'?'selected-l':'';
+          return `<div class="game-row">
+            <span class="game-label">${gs.label}</span>
+            <div class="game-result-btns">
+              <button class="grb ${r1sel}" onclick="recordGame('${m.id}',${gs.num},'p1')" ${isDone&&gs.num>m.games.length?'disabled':''}>
+                ${m.p1.split(' ')[0]} W
+              </button>
+              <button class="grb ${g?.result==='draw'?'selected-d':''}" onclick="recordGame('${m.id}',${gs.num},'draw')" ${isDone&&gs.num>m.games.length?'disabled':''}>
+                Draw
+              </button>
+              <button class="grb ${r2sel}" onclick="recordGame('${m.id}',${gs.num},'p2')" ${isDone&&gs.num>m.games.length?'disabled':''}>
+                ${m.p2.split(' ')[0]} W
+              </button>
+            </div>
+          </div>`;
+        }).join('')}
+        ${isDone?'':`<button class="btn btn-sec" style="margin-top:6px;font-size:11px;padding:5px 10px;" onclick="undoLastGame('${m.id}')">↩ Undo last</button>`}
+      </div>
+      <div class="elo-preview">
+        <span>${m.p1}: ${p1.elo} ${s1>s2?'↑':s1<s2?'↓':'='}</span>
+        <span>${m.p2}: ${p2.elo} ${s2>s1?'↑':s2<s1?'↓':'='}</span>
+      </div>
+    </div>`;
+  });
+  html+=`</div></div>`;
+  return html;
+}
+
+// ═══ RECORD GAME ═══
+function recordGame(matchId,gameNum,result){
+  const m=T.matches.find(x=>x.id===matchId);
+  if(!m||m.status==='done') return;
+  const p1=PLAYERS.find(p=>p.name===m.p1);
+  const p2=PLAYERS.find(p=>p.name===m.p2);
+  if(!p1||!p2) return;
+
+  // Score for elo: p1 wins=1/0, draw=0.5/0.5, p2 wins=0/1
+  const s1=result==='p1'?1:result==='draw'?.5:0;
+  const s2=1-s1;
+
+  const oldElo1=p1.elo, oldElo2=p2.elo;
+  const newElo1=calcElo(oldElo1,oldElo2,s1);
+  const newElo2=calcElo(oldElo2,oldElo1,s2);
+  const delta1=newElo1-oldElo1;
+  const delta2=newElo2-oldElo2;
+
+  // Update elos
+  p1.elo=newElo1; p2.elo=newElo2;
+
+  // Store game
+  const gameEntry={round:m.round,matchId,gameNum,p1:m.p1,p2:m.p2,result,eloA:oldElo1,eloB:oldElo2,deltaA:delta1,deltaB:delta2};
+  // Replace or add
+  const existing=T.gameLog.findIndex(g=>g.matchId===matchId&&g.gameNum===gameNum);
+  if(existing>=0){ 
+    // Revert old elo changes first
+    const old=T.gameLog[existing];
+    p1.elo=p1.elo-delta1+old.deltaA; // not quite right for chained — simplify: recalculate
+    p2.elo=p2.elo-delta2+old.deltaB;
+    T.gameLog.splice(existing,1);
+    // Recalc from scratch for this match
+    recalcMatchElos(m);
+    return;
+  }
+  T.gameLog.push(gameEntry);
+
+  // Update match games array
+  if(m.games.length>=gameNum) m.games[gameNum-1]={result,delta1,delta2};
+  else m.games.push({result,delta1,delta2});
+
+  // Check if match is done
+  checkMatchCompletion(m);
+  renderAll();
+  toast(`Game recorded · ${m.p1} ${s1} – ${s2} ${m.p2} · Δ${delta1>=0?'+':''}${delta1} / ${delta2>=0?'+':''}${delta2}`);
+}
+
+function recalcMatchElos(m){
+  // Reset elos for both players to before this match
+  const p1=PLAYERS.find(p=>p.name===m.p1);
+  const p2=PLAYERS.find(p=>p.name===m.p2);
+  // Get all games before this match
+  const otherGames=T.gameLog.filter(g=>g.matchId!==m.id);
+  // Reset to start
+  p1.elo=p1.startElo; p2.elo=p2.startElo;
+  // Replay all games
+  T.gameLog.forEach(g=>{
+    const pa=PLAYERS.find(p=>p.name===g.p1);
+    const pb=PLAYERS.find(p=>p.name===g.p2);
+    if(pa) pa.elo=pa.startElo;
+    if(pb) pb.elo=pb.startElo;
+  });
+  // Full recalc from all games
+  fullRecalcElos();
+  renderAll();
+}
+
+function fullRecalcElos(){
+  // Reset all to start
+  PLAYERS.forEach(p=>p.elo=p.startElo);
+  // Replay all game log in order
+  const sortedLog=[...T.gameLog].sort((a,b)=>a.matchId.localeCompare(b.matchId)||a.gameNum-b.gameNum);
+  sortedLog.forEach(g=>{
+    const p1=PLAYERS.find(p=>p.name===g.p1);
+    const p2=PLAYERS.find(p=>p.name===g.p2);
+    if(!p1||!p2) return;
+    const s1=g.result==='p1'?1:g.result==='draw'?.5:0;
+    const s2=1-s1;
+    const n1=calcElo(p1.elo,p2.elo,s1);
+    const n2=calcElo(p2.elo,p1.elo,s2);
+    g.deltaA=n1-p1.elo; g.deltaB=n2-p2.elo;
+    p1.elo=n1; p2.elo=n2;
+  });
+}
+
+function undoLastGame(matchId){
+  const m=T.matches.find(x=>x.id===matchId);
+  if(!m||!m.games.length) return;
+  const lastGameNum=m.games.length;
+  T.gameLog=T.gameLog.filter(g=>!(g.matchId===matchId&&g.gameNum===lastGameNum));
+  m.games.pop();
+  m.status='active';
+  m.winner=null;
+  fullRecalcElos();
+  renderAll();
+  toast('Last game undone');
+}
+
+function checkMatchCompletion(m){
+  const s1=m.games.reduce((a,g)=>a+(g.result==='p1'?1:g.result==='draw'?.5:0),0);
+  const s2=m.games.reduce((a,g)=>a+(g.result==='p2'?1:g.result==='draw'?.5:0),0);
+  const isR2=m.round==='r2';
+
+  if(isR2){
+    // Single game in mini-RR — always done after 1 game
+    m.status='done';
+    m.winner=s1>s2?m.p1:s2>s1?m.p2:'draw';
+    // Update r2 scores
+    if(!T.playerStats[m.p1].r2score) T.playerStats[m.p1].r2score=0;
+    if(!T.playerStats[m.p2].r2score) T.playerStats[m.p2].r2score=0;
+    T.playerStats[m.p1].r2score+=s1;
+    T.playerStats[m.p2].r2score+=s2;
+    // Check if all r2 matches done → eliminate lowest
+    checkR2Completion();
+  } else {
+    // Best of 2 + SD
+    if(m.games.length===1){
+      // After game 1, continue
+    } else if(m.games.length===2){
+      if(s1!==s2){ m.status='done'; m.winner=s1>s2?m.p1:m.p2; }
+      // else tied → need SD
+    } else if(m.games.length>=3){
+      // SD game — must have a winner (no draw allowed in SD)
+      if(m.games[2].result!=='draw'){ m.status='done'; m.winner=s1>s2?m.p1:m.p2; }
+    }
+    if(m.status==='done'){
+      T.playerStats[m.winner].wins=(T.playerStats[m.winner].wins||0)+1;
+      const loser=m.winner===m.p1?m.p2:m.p1;
+      T.playerStats[loser].stage='eliminated';
+      // Advance stage if all matches in round done
+      advanceStage(m.round);
+    }
+  }
+}
+
+function checkR2Completion(){
+  const r2matches=T.matches.filter(m=>m.round==='r2');
+  if(r2matches.every(m=>m.status==='done')){
+    // Find lowest r2 score
+    const r2players=[...new Set(r2matches.flatMap(m=>[m.p1,m.p2]))];
+    const scores=r2players.map(n=>({name:n,score:T.playerStats[n].r2score||0,elo:PLAYERS.find(p=>p.name===n)?.elo||2000}));
+    scores.sort((a,b)=>a.score-b.score||a.elo-b.elo);
+    const eliminated=scores[0].name;
+    T.playerStats[eliminated].stage='eliminated';
+    toast(`${eliminated} eliminated from Round 2 (lowest score)`);
+    // Set up QF with remaining 4
+    const remaining=r2players.filter(n=>n!==eliminated);
+    setupQF(remaining);
+  }
+}
+
+function advanceStage(completedRound){
+  const roundMatches=T.matches.filter(m=>m.round===completedRound);
+  if(!roundMatches.every(m=>m.status==='done')) return;
+  if(completedRound==='r1'){
+    // All R1 done → set up R2
+    const r1winners=roundMatches.map(m=>m.winner);
+    T.stage='r2';
+    setupR2(r1winners);
+  } else if(completedRound==='qf'){
+    const qfwinners=roundMatches.map(m=>m.winner);
+    T.stage='final';
+    setupFinal(qfwinners);
+  } else if(completedRound==='final'){
+    T.stage='done';
+    const champion=roundMatches[0].winner;
+    T.playerStats[champion].stage='winner';
+    toast(`🏆 ${champion} wins the FCL Cycle 27 Group A!`,'gold');
+  }
+}
+
+function setupR2(players){
+  // Mini RR: p1vp2, p3vp4, p5vp1, p2vp3, p4vp5
+  const p=players;
+  if(p.length<5) return;
+  const pairs=[[p[0],p[1]],[p[2],p[3]],[p[4],p[0]],[p[1],p[2]],[p[3],p[4]]];
+  pairs.forEach((pair,i)=>{
+    T.matches.push({id:`r2-${i+1}`,round:'r2',p1:pair[0],p2:pair[1],games:[],status:'active',winner:null});
+  });
+  // Reset r2 scores
+  players.forEach(n=>T.playerStats[n].r2score=0);
+  toast('Round 2 set up!');
+}
+
+function setupQF(players){
+  T.stage='qf';
+  // Seed by elo: 1v4, 2v3
+  const seeded=[...players].sort((a,b)=>(PLAYERS.find(p=>p.name===b)?.elo||2000)-(PLAYERS.find(p=>p.name===a)?.elo||2000));
+  T.matches.push({id:'qf-1',round:'qf',p1:seeded[0],p2:seeded[3],games:[],status:'active',winner:null});
+  T.matches.push({id:'qf-2',round:'qf',p1:seeded[1],p2:seeded[2],games:[],status:'active',winner:null});
+  toast('Quarterfinals set up!');
+}
+
+function setupFinal(players){
+  T.matches.push({id:'final-1',round:'final',p1:players[0],p2:players[1],games:[],status:'active',winner:null});
+  toast('Final set up!');
+}
+
+// ═══ LEADERBOARD ═══
+function renderLeaderboard(){
+  const tbody=document.getElementById('lbBody');
+  const sorted=[...PLAYERS].sort((a,b)=>b.elo-a.elo);
+  tbody.innerHTML=sorted.map((p,i)=>{
+    const delta=p.elo-p.startElo;
+    const dCls=delta>0?'elo-up':delta<0?'elo-down':'elo-neutral';
+    const stat=T.playerStats[p.name];
+    const stageLbl=stat?.stage==='eliminated'?'❌ Out':stat?.stage==='winner'?'🏆 Champion':'✓ Active';
+    return `<tr>
+      <td class="td-rank">${i+1}</td>
+      <td><div style="display:flex;align-items:center;gap:9px;">${avHTML(p.name,28,10)}<span class="td-name">${p.name}</span></div></td>
+      <td>${pill(p.title)}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text3);">${p.startElo}</td>
+      <td class="td-elo ${dCls}">${p.elo}</td>
+      <td><span class="delta-badge ${delta>0?'delta-pos':delta<0?'delta-neg':'delta-zero'}">${delta>=0?'+':''}${delta}</span></td>
+      <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);">${stat?.wins||0}W · ${stat?.draws||0}D · ${stat?.losses||0}L</td>
+      <td style="font-size:12px;color:var(--text2);">${stageLbl}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ═══ ELO TAB ═══
+function renderEloTab(){
+  // Summary
+  const sumEl=document.getElementById('eloSummary');
+  if(!T.gameLog.length){ sumEl.innerHTML='<p style="font-size:13px;color:var(--text3);">No games recorded yet.</p>'; }
+  else {
+    const changes={};
+    PLAYERS.forEach(p=>changes[p.name]=p.elo-p.startElo);
+    sumEl.innerHTML=Object.entries(changes).sort((a,b)=>b[1]-a[1]).map(([name,delta])=>{
+      const p=PLAYERS.find(x=>x.name===name);
+      return `<div class="export-row">
+        <div style="display:flex;align-items:center;gap:10px;">${avHTML(name,26,10)}<span class="er-name">${name}</span>${pill(p?.title||'—')}</div>
+        <div>
+          <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text3);margin-right:8px;">${p?.startElo} → ${p?.elo}</span>
+          <span class="er-change ${delta>0?'elo-up':delta<0?'elo-down':'elo-neutral'}">${delta>=0?'+':''}${delta}</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  // Game log
+  const tbody=document.getElementById('gameLogBody');
+  tbody.innerHTML=T.gameLog.map((g,i)=>`<tr>
+    <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);">${g.round.toUpperCase()}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);">G${g.gameNum}</td>
+    <td><div style="display:flex;align-items:center;gap:7px;">${avHTML(g.p1,22,8)}<span style="font-size:13px;font-weight:600;color:var(--white);">${g.p1}</span></div></td>
+    <td style="text-align:center;font-family:'DM Mono',monospace;font-size:12px;color:${g.result==='draw'?'var(--gold-light)':g.result==='p1'?'var(--green)':'var(--red)'};">${g.result==='p1'?'1-0':g.result==='p2'?'0-1':'½-½'}</td>
+    <td><div style="display:flex;align-items:center;gap:7px;">${avHTML(g.p2,22,8)}<span style="font-size:13px;font-weight:600;color:var(--white);">${g.p2}</span></div></td>
+    <td><span class="delta-badge ${g.deltaA>0?'delta-pos':g.deltaA<0?'delta-neg':'delta-zero'}">${g.deltaA>=0?'+':''}${g.deltaA}</span></td>
+    <td><span class="delta-badge ${g.deltaB>0?'delta-pos':g.deltaB<0?'delta-neg':'delta-zero'}">${g.deltaB>=0?'+':''}${g.deltaB}</span></td>
+  </tr>`).join('') || '<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text3);font-size:13px;">No games recorded yet.</td></tr>';
+}
+
+// ═══ SETUP TAB ═══
+function renderSetup(){
+  // Elo inputs
+  const grid=document.getElementById('eloSetupGrid');
+  grid.innerHTML=PLAYERS.map(p=>`
+    <div style="display:flex;align-items:center;gap:10px;">
+      ${avHTML(p.name,28,10)}
+      <span style="flex:1;font-weight:600;font-size:13px;color:var(--white);">${p.name}</span>
+      ${pill(p.title)}
+      <input class="form-input" id="elo_${p.name.replace(/\s/g,'_')}" type="number" value="${p.startElo}" style="width:90px;text-align:center;" min="1000" max="3000">
+    </div>`).join('');
+  // Pairing setup
+  const ps=document.getElementById('pairingSetup');
+  const playerOpts=PLAYERS.map(p=>`<option value="${p.name}">${p.name}</option>`).join('');
+  ps.innerHTML=Array.from({length:5},(_,i)=>`
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);min-width:60px;">Match ${i+1}</span>
+      <select class="form-select" id="pair_a_${i}" style="flex:1;">${playerOpts}</select>
+      <span style="color:var(--text3);font-size:13px;">vs</span>
+      <select class="form-select" id="pair_b_${i}" style="flex:1;">${playerOpts}</select>
+    </div>`).join('');
+  // Auto-seed defaults
+  autoSeedPairings(false);
+}
+
+function autoSeedPairings(showToast=true){
+  const sorted=[...PLAYERS].sort((a,b)=>b.elo-a.elo);
+  // 1v6, 2v7, 3v8, 4v9, 5v10
+  const pairs=[[0,5],[1,6],[2,7],[3,8],[4,9]];
+  pairs.forEach(([a,b],i)=>{
+    const sa=document.getElementById(`pair_a_${i}`);
+    const sb=document.getElementById(`pair_b_${i}`);
+    if(sa&&sb&&sorted[a]&&sorted[b]){ sa.value=sorted[a].name; sb.value=sorted[b].name; }
+  });
+  if(showToast) toast('Auto-seeded by Elo (1v6, 2v7, 3v8, 4v9, 5v10)');
+}
+
+function saveStartingElos(){
+  PLAYERS.forEach(p=>{
+    const el=document.getElementById(`elo_${p.name.replace(/\s/g,'_')}`);
+    if(el){ const v=parseInt(el.value); if(v>=100&&v<=4000){p.startElo=v;p.elo=v;} }
+  });
+  fullRecalcElos();
+  renderAll();
+  toast('Starting Elos saved!');
+}
+
+function savePairings(){
+  const pairs=[];
+  let valid=true;
+  const used=new Set();
+  for(let i=0;i<5;i++){
+    const a=document.getElementById(`pair_a_${i}`)?.value;
+    const b=document.getElementById(`pair_b_${i}`)?.value;
+    if(!a||!b||a===b){valid=false;break;}
+    if(used.has(a)||used.has(b)){valid=false;break;}
+    used.add(a);used.add(b);
+    pairs.push([a,b]);
+  }
+  if(!valid||pairs.length<5){toast('Invalid pairings — check for duplicates',true);return;}
+  // Create R1 matches
+  T.matches=[];
+  T.gameLog=[];
+  PLAYERS.forEach(p=>{p.elo=p.startElo;T.playerStats[p.name]={wins:0,draws:0,losses:0,stage:'active',r2score:0};});
+  pairs.forEach(([a,b],i)=>{
+    T.matches.push({id:`r1-${i+1}`,round:'r1',p1:a,p2:b,games:[],status:'active',winner:null});
+  });
+  T.stage='r1';
+  renderAll();
+  toast('Round 1 pairings set! Head to Bracket tab.');
+}
+
+function resetTournament(){
+  if(!confirm('Reset entire tournament? All results will be lost.')) return;
+  T.matches=[]; T.gameLog=[]; T.stage='setup';
+  PLAYERS.forEach(p=>{p.elo=p.startElo;T.playerStats[p.name]={wins:0,draws:0,losses:0,stage:'active',r2score:0};});
+  renderAll();
+  toast('Tournament reset');
+}
+
+// ═══ UTILS ═══
+function showTab(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(btn) btn.classList.add('active');
+}
+
+function renderAll(){
+  renderOverview();
+  renderBracket();
+  renderLeaderboard();
+  renderEloTab();
+  renderSetup();
+}
+
+function toast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.style.borderLeftColor=type==='gold'?'var(--gold)':type==='err'?'var(--red)':'var(--rapid)';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+renderAll();
+</script>
+</body>
+</html>
