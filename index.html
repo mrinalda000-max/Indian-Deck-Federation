@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indian Deck Federation — COCO</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07090f;--bg2:#0b0f1a;--bg3:#0f1520;--bg4:#141c2c;--border:#1a2438;--border2:#202e48;--gold:#c9a84c;--gold-light:#e8c97a;--gold-pale:#2a2010;--text:#dde4f0;--text2:#8a9ab8;--text3:#5a6a88;--green:#2ecc71;--rapid:#e67e22;--classical:#3d7ae8;--blitz:#8e44ad;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{background:linear-gradient(135deg,#04060a,#080e18,#0c1422);border-bottom:1px solid var(--border2);position:relative;overflow:hidden;padding:48px 32px 40px;}
+header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(201,168,76,.08) 0%,transparent 60%);}
+header::after{content:'FIDE';position:absolute;right:-20px;top:-10px;font-family:'Playfair Display',serif;font-size:180px;font-weight:900;color:rgba(201,168,76,.04);pointer-events:none;line-height:1;}
+.hi{position:relative;z-index:1;max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:28px;flex-wrap:wrap;}
+.logo{width:80px;height:80px;flex-shrink:0;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:#070a0f;box-shadow:0 0 0 3px rgba(201,168,76,.25),0 8px 32px rgba(0,0,0,.5);animation:glow 3s ease-in-out infinite alternate;}
+@keyframes glow{from{box-shadow:0 0 0 3px rgba(201,168,76,.25),0 8px 32px rgba(0,0,0,.5);}to{box-shadow:0 0 0 6px rgba(201,168,76,.4),0 8px 48px rgba(201,168,76,.15);}}
+.ey{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.tt{font-family:'Playfair Display',serif;font-size:clamp(24px,5vw,42px);font-weight:900;color:#e8edf8;line-height:1.1;}
+.tt span{color:var(--gold-light);}
+.sb{margin-top:8px;font-size:14px;color:var(--text2);}
+.hbs{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;}
+.hb{background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:6px;padding:4px 12px;font-size:11px;font-family:'DM Mono',monospace;color:var(--gold);letter-spacing:.8px;}
+main{max-width:1100px;margin:0 auto;padding:40px 32px 80px;}
+.sl{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text3);margin-bottom:14px;margin-top:32px;display:flex;align-items:center;gap:12px;}
+.sl::after{content:'';flex:1;height:1px;background:var(--border);}
+.sl:first-child{margin-top:0;}
+.mc{background:linear-gradient(135deg,#0d1422,#111a2e);border:1px solid var(--gold);border-radius:16px;padding:28px;margin-bottom:8px;display:flex;align-items:center;gap:24px;cursor:pointer;transition:all .25s;text-decoration:none;color:inherit;}
+.mc:hover{border-color:var(--gold-light);box-shadow:0 8px 40px rgba(201,168,76,.12);transform:translateY(-2px);}
+.mci{width:64px;height:64px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:#070a0f;flex-shrink:0;}
+.mcl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.mct{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#e8edf8;margin-bottom:4px;}
+.mcd{font-size:13px;color:var(--text2);}
+.mca{margin-left:auto;font-size:24px;color:var(--gold);flex-shrink:0;}
+.cb{background:var(--bg3);border:1px solid var(--border);border-radius:10px 10px 0 0;padding:14px 20px;display:flex;align-items:center;gap:12px;margin-top:10px;}
+.cb:first-of-type{margin-top:0;}
+.ci{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.cn{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:#e8edf8;}
+.cd{font-size:12px;color:var(--text3);margin-top:2px;}
+.ct{margin-left:auto;font-size:10px;font-family:'DM Mono',monospace;padding:3px 9px;border-radius:6px;}
+.gg{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;overflow:hidden;margin-bottom:4px;}
+.gc{padding:16px 14px;border-right:1px solid var(--border);cursor:pointer;transition:background .15s;text-decoration:none;display:block;}
+.gc:last-child{border-right:none;}
+.gc:hover{background:var(--bg4);}
+.gg-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px;}
+.gg-name{font-weight:600;font-size:13px;color:#e8edf8;margin-bottom:3px;}
+.gg-pl{font-size:11px;color:var(--text3);}
+.sg{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-bottom:8px;}
+.sc{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:18px;cursor:pointer;transition:all .2s;text-decoration:none;display:block;color:inherit;}
+.sc:hover{background:var(--bg4);border-color:var(--border2);transform:translateY(-2px);}
+.sc.dim{opacity:.5;cursor:not-allowed;pointer-events:none;}
+.scic{font-size:22px;margin-bottom:8px;}
+.scl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;}
+.scn{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:#e8edf8;margin-bottom:3px;}
+.scd{font-size:12px;color:var(--text2);}
+.coming{background:var(--bg3);border:1px dashed var(--border2);border-radius:12px;padding:18px;margin-bottom:8px;text-align:center;color:var(--text3);}
+.coming-icon{font-size:24px;margin-bottom:6px;}
+.coming-name{font-size:14px;font-weight:600;color:var(--text2);margin-bottom:3px;}
+.coming-desc{font-size:12px;}
+.r{color:var(--rapid);}
+.cl{color:var(--classical);}
+.bl{color:var(--blitz);}
+.go{color:var(--gold);}
+.rb{background:rgba(230,126,34,.08);border-color:rgba(230,126,34,.2);}
+.clb{background:rgba(61,122,232,.08);border-color:rgba(61,122,232,.2);}
+.blb{background:rgba(142,68,173,.08);border-color:rgba(142,68,173,.2);}
+.tr{background:rgba(230,126,34,.1);border:1px solid rgba(230,126,34,.3);color:var(--rapid);}
+.tc{background:rgba(61,122,232,.1);border:1px solid rgba(61,122,232,.3);color:var(--classical);}
+.tb{background:rgba(142,68,173,.1);border:1px solid rgba(142,68,173,.3);color:var(--blitz);}
+.tg{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold);}
+footer{background:#030507;border-top:1px solid var(--border);text-align:center;padding:24px;font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);letter-spacing:1px;}
+footer span{color:var(--gold);}
+@media(max-width:640px){header{padding:30px 16px 26px;}main{padding:24px 14px 60px;}.gg{grid-template-columns:repeat(2,1fr);}.gc:nth-child(2){border-right:none;}.gc:nth-child(3){border-right:1px solid var(--border);}.mc{flex-direction:column;align-items:flex-start;gap:16px;}.mca{display:none;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hi">
+    <div class="logo">FIDE</div>
+    <div>
+      <div class="ey">Call of Cards Official · Official Governing Body</div>
+      <div class="tt">Indian Deck <span>Federation</span></div>
+      <div class="sb">Governing COCO worldwide — all tournaments, ratings and cycles</div>
+      <div class="hbs">
+        <span class="hb">Cycle 27</span>
+        <span class="hb">Phase 4</span>
+        <span class="hb">40 Players</span>
+        <span class="hb">4 Groups</span>
+      </div>
+    </div>
+  </div>
+</header>
+<main>
+
+  <div class="sl">Main Database</div>
+  <a class="mc" href="IDF_FIDE_FINAL.html">
+    <div class="mci">DB</div>
+    <div>
+      <div class="mcl">Official Database</div>
+      <div class="mct">IDF FIDE — Organization</div>
+      <div class="mcd">Players · History · Titles · Ratings · Phase 4 · Full saga records</div>
+    </div>
+    <div class="mca">→</div>
+  </a>
+
+  <div class="sl">Grand Prix Circuit — Rapid Rated</div>
+
+  <div class="cb">
+    <div class="ci rb" style="border:1px solid rgba(230,126,34,.3);">⚡</div>
+    <div><div class="cn">FCL — FIDE COCO League</div><div class="cd">Single Knockout · Best of 2 + Sudden Death · Rapid Rated</div></div>
+    <span class="ct tr">Rapid</span>
+  </div>
+  <div class="gg">
+    <a class="gc" href="FCL_Cycle27_GroupA.html"><div class="gg-label r">Group A</div><div class="gg-name">FCL — Group A</div><div class="gg-pl">Sourav · Henthoi · Ju-Wenjun +7</div></a>
+    <a class="gc" href="FCL_Cycle27_GroupB.html"><div class="gg-label r">Group B</div><div class="gg-name">FCL — Group B</div><div class="gg-pl">Priyampali · Pari · Duda +7</div></a>
+    <a class="gc" href="FCL_Cycle27_GroupC.html"><div class="gg-label r">Group C</div><div class="gg-name">FCL — Group C</div><div class="gg-pl">Jungkook · Prasanta · Ding +7</div></a>
+    <a class="gc" href="FCL_Cycle27_GroupD.html"><div class="gg-label r">Group D</div><div class="gg-name">FCL — Group D</div><div class="gg-pl">Jay · Levy · Dixita +7</div></a>
+  </div>
+
+  <div class="cb">
+    <div class="ci rb" style="border:1px solid rgba(230,126,34,.3);">🔁</div>
+    <div><div class="cn">St. Louis Rapid</div><div class="cd">Single Round Robin · 9 Rounds · Rapid Rated</div></div>
+    <span class="ct tr">Rapid</span>
+  </div>
+  <div class="gg">
+    <a class="gc" href="StLouisRapid_Cycle27_GroupA.html"><div class="gg-label r">Group A</div><div class="gg-name">St. Louis — Group A</div><div class="gg-pl">Sourav · Henthoi · Ju-Wenjun +7</div></a>
+    <a class="gc" href="StLouisRapid_Cycle27_GroupB.html"><div class="gg-label r">Group B</div><div class="gg-name">St. Louis — Group B</div><div class="gg-pl">Priyampali · Pari · Duda +7</div></a>
+    <a class="gc" href="StLouisRapid_Cycle27_GroupC.html"><div class="gg-label r">Group C</div><div class="gg-name">St. Louis — Group C</div><div class="gg-pl">Jungkook · Prasanta · Ding +7</div></a>
+    <a class="gc" href="StLouisRapid_Cycle27_GroupD.html"><div class="gg-label r">Group D</div><div class="gg-name">St. Louis — Group D</div><div class="gg-pl">Jay · Levy · Dixita +7</div></a>
+  </div>
+
+  <div class="cb">
+    <div class="ci rb" style="border:1px solid rgba(230,126,34,.3);">🇨🇭</div>
+    <div><div class="cn">Tata Steel Masters</div><div class="cd">Swiss · 7 Rounds · Rapid Rated</div></div>
+    <span class="ct tr">Rapid</span>
+  </div>
+  <div class="gg">
+    <a class="gc" href="TataSteelMasters_Cycle27_GroupA.html"><div class="gg-label r">Group A</div><div class="gg-name">Tata Steel — Group A</div><div class="gg-pl">Sourav · Henthoi · Ju-Wenjun +7</div></a>
+    <a class="gc" href="TataSteelMasters_Cycle27_GroupB.html"><div class="gg-label r">Group B</div><div class="gg-name">Tata Steel — Group B</div><div class="gg-pl">Priyampali · Pari · Duda +7</div></a>
+    <a class="gc" href="TataSteelMasters_Cycle27_GroupC.html"><div class="gg-label r">Group C</div><div class="gg-name">Tata Steel — Group C</div><div class="gg-pl">Jungkook · Prasanta · Ding +7</div></a>
+    <a class="gc" href="TataSteelMasters_Cycle27_GroupD.html"><div class="gg-label r">Group D</div><div class="gg-name">Tata Steel — Group D</div><div class="gg-pl">Jay · Levy · Dixita +7</div></a>
+  </div>
+
+  <div class="sl">Cross-Group Events — Classical Rated</div>
+  <div class="sg">
+    <a class="sc" href="GrandSwiss_Cycle27.html">
+      <div class="scic">🏔</div>
+      <div class="scl cl">Classical · Cross-Group · 18 Players</div>
+      <div class="scn">Grand Swiss</div>
+      <div class="scd">Top 6 pass R1 · Elimination rounds · Score-based cards · → Candidates A1+A2</div>
+    </a>
+    <div class="sc dim">
+      <div class="scic">🌍</div>
+      <div class="scl cl">Classical · Cross-Group · 16 Players</div>
+      <div class="scn">World Cup</div>
+      <div class="scd">Double Knockout · → Candidates B1+B2 · Coming soon</div>
+    </div>
+    <div class="sc dim">
+      <div class="scic">⚡</div>
+      <div class="scl r">Rapid · Cross-Group · 8 Players</div>
+      <div class="scn">Rapid Championship</div>
+      <div class="scd">Top 2 Rapid Elo per group · → Candidates C1 · Coming soon</div>
+    </div>
+    <div class="sc dim">
+      <div class="scic">🌩</div>
+      <div class="scl bl">Blitz · Cross-Group · 8 Players</div>
+      <div class="scn">Blitz Championship</div>
+      <div class="scd">Top 2 Blitz Elo per group · → Candidates C2 · Coming soon</div>
+    </div>
+  </div>
+
+  <div class="sl">Grand Slam Circuit — Blitz Rated · Coming Soon</div>
+  <div class="coming"><div class="coming-icon">🌩</div><div class="coming-name">Grand Slam — Blitz Circuit</div><div class="coming-desc">Chennai Masters · St. Louis Blitz · Grunfeld Cup — all 4 groups</div></div>
+
+  <div class="sl">Grand Coco Tour — Classical Rated · Coming Soon</div>
+  <div class="coming"><div class="coming-icon">♟</div><div class="coming-name">Grand Coco Tour — Classical Circuit</div><div class="coming-desc">Grenke Classic · Sinquefield Cup · Norway Classic — all 4 groups</div></div>
+
+</main>
+<footer><strong><span>FIDE</span> · Indian Deck Federation</strong> &nbsp;·&nbsp; COCO — Call of Cards Official &nbsp;·&nbsp; Cycle 27 · Phase 4</footer>
+</body>
+</html>
